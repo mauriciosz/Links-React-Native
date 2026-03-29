@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native";
 
 import { colors } from "@/styles/colors";
 import { styles } from "./styles";
@@ -8,11 +8,28 @@ import { styles } from "./styles";
 import { Categories } from "@/components/categories";
 import { Link } from "@/components/link";
 import { Option } from "@/components/options";
+import { linkStorage, LinkStorage } from "@/storage/link-storage";
 import { categories } from "@/utils/categories";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Index() {
+  //-- lista de LinkStorage que inicia vazia...
+  const [links, setLinks] = useState<LinkStorage[]>([])
   const [category, setCategory] = useState(categories[0].name)
+
+  async function getLinks(){
+    try{
+      const response = await linkStorage.Get();
+      setLinks(response)
+    }catch(error){
+      Alert.alert("Erro", "Não foi possível listar os Links")
+    }
+  }
+
+  //-- É executado sempre que o valor de Category mudar, chamando assim a getLinks()
+  useEffect(() => 
+    {getLinks()}, [category]
+  )
 
   return (
     <View style={styles.container}>
@@ -26,12 +43,12 @@ export default function Index() {
       <Categories onChange={setCategory} selected={category}/>
 
       <FlatList 
-        data={["1", "2", "3"]}
-        keyExtractor={item => item}
-        renderItem={() => (<Link 
-                              name="RocketSeat"
-                              url="https://www.rocketseat.com.br/"
-                              onDetails={() => console.log("Clicou")}
+        data={links}
+        keyExtractor={(item) => item.id}
+        renderItem={({item}) => (<Link 
+                                    name={item.name}
+                                    url={item.url}
+                                    onDetails={() => console.log("Clicou")}
                             />)}
         style={styles.links}                          
         contentContainerStyle={styles.linksContent}

@@ -42,11 +42,11 @@ export default function Add(){
                 category
             })
 
-            /* -- UTILIZAR PARA TESTAR SE ESTÁ GRAVANDO CORRETAMENTE OS DADOS!!!
+            // -- UTILIZAR PARA TESTAR SE ESTÁ GRAVANDO CORRETAMENTE OS DADOS!!!
             const data = await linkStorage.Get()
             console.log(data)
-            */
-            //console.log({category, name, url})
+            
+            console.log({category, name, url})
         } catch(error){
             Alert.alert("Erro", "Não foi possível salvar o link")
             console.log(error)
