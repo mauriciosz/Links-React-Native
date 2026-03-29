@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
-import { Alert, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Image, Linking, Modal, Text, TouchableOpacity, View } from "react-native";
 
 import { colors } from "@/styles/colors";
 import { styles } from "./styles";
@@ -62,6 +62,18 @@ export default function Index() {
     setLink(selected)
   }
 
+  async function handleOpenLink(){
+    try {
+      console.log(link.url)      
+      await Linking.openURL(link.url) 
+      setShowModal(false)     
+    } catch (error) {
+      Alert.alert("Link", "Não foi possível abrir o link.")
+      setShowModal(false)  
+      console.log(error)
+    }
+  }
+
   //-- É executado sempre que o valor de Category mudar, chamando assim a getLinks()
   /* Essa função foi trocada pelo UseCallBack com useFocusEffect
   useEffect(() => 
@@ -113,7 +125,7 @@ export default function Index() {
 
             <View style={styles.modalFooter}>
               <Option name="Excluir" icon="delete" variant="secundary" onPress={handleRemove}/>
-              <Option name="Abrir" icon="language"/>
+              <Option name="Abrir" icon="language" onPress={handleOpenLink}/>
             </View>
           </View>
         </View>
