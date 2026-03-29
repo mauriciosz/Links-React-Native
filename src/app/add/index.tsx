@@ -10,6 +10,7 @@ import { styles } from "./styles";
 import { Button } from "@/components/button";
 import { Categories } from "@/components/categories";
 import { Input } from "@/components/input";
+import { linkStorage } from "@/storage/link-storage";
 
 export default function Add(){
     const [category, setCategory] = useState("")
@@ -19,20 +20,37 @@ export default function Add(){
     /* A forma escrita do useState para ambos os casos refletem a mesma coisa, 
         que ambos recebem uma string vazia... */
 
-    function handleAdd(){
-        if(!category){
-            return Alert.alert("Categoria", "Selecione a Categoria!")
-        }
+    async function handleAdd(){
+        try{
+            if(!category){
+                return Alert.alert("Categoria", "Selecione a Categoria!")
+            }
 
-        if(!name.trim()){
-            return Alert.alert("Nome", "Nome é um campo obrigatório!")
-        }
+            if(!name.trim()){
+                return Alert.alert("Nome", "Nome é um campo obrigatório!")
+            }
 
-        if(!url?.trim()){
-            return Alert.alert("URL", "URL é um campo obrigatório!")
-        }
+            if(!url?.trim()){
+                return Alert.alert("URL", "URL é um campo obrigatóri!")
+            }
 
-        console.log({category, name, url})
+            //-- Grava os dados no Storage
+            await linkStorage.Save({
+                id: new Date().getTime().toString(),
+                name,
+                url,
+                category
+            })
+
+            /* -- UTILIZAR PARA TESTAR SE ESTÁ GRAVANDO CORRETAMENTE OS DADOS!!!
+            const data = await linkStorage.Get()
+            console.log(data)
+            */
+            //console.log({category, name, url})
+        } catch(error){
+            Alert.alert("Erro", "Não foi possível salvar o link")
+            console.log(error)
+        }
     }
 
     return (
@@ -50,7 +68,7 @@ export default function Add(){
 
             <View style={styles.form}>
                 <Input placeholder="Digite o nome do site" onChangeText={setName}/>
-                <Input placeholder="Digite a URL..." onChangeText={setUrl}/>
+                <Input placeholder="Digite a URL..." onChangeText={setUrl} autoCapitalize="none"/>
             </View>
 
             <Button title="Adicionar" onPress={handleAdd}/>
