@@ -19,8 +19,14 @@ export default function Index() {
 
   async function getLinks(){
     try{
+      //-- Retorna TODOS os registros no Storage
       const response = await linkStorage.Get();
-      setLinks(response)
+
+      //-- Filtra somente registros da categoria selecionada
+      const filtrados = response.filter((item) => item.category === category)
+
+      //-- passa registros filtrados
+      setLinks(filtrados)
     }catch(error){
       Alert.alert("Erro", "Não foi possível listar os Links")
     }
@@ -36,7 +42,7 @@ export default function Index() {
   useFocusEffect(
     useCallback(() => {
       getLinks()  
-    }, [])
+    }, [category])
   )
 
   return (

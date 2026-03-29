@@ -42,6 +42,13 @@ export default function Add(){
                 category
             })
 
+            Alert.alert("Sucesso", "Novo Link adicionado", [
+                { 
+                    text: "Ok", 
+                    onPress: () => router.back()
+                }
+            ])
+
             // -- UTILIZAR PARA TESTAR SE ESTÁ GRAVANDO CORRETAMENTE OS DADOS!!!
             const data = await linkStorage.Get()
             console.log(data)
