@@ -33,6 +33,29 @@ export default function Index() {
       Alert.alert("Erro", "Não foi possível listar os Links")
     }
   }
+  
+  async function linkRemove(){
+    try {
+      //-- Revome o Link selecionado
+      await linkStorage.Remove(link.id)
+
+      //-- Atualiza lista de Links
+      getLinks()
+
+      //-- Fecha a tela Modal
+      setShowModal(false)
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível excluir Link")
+      console.log(error)
+    }    
+  }
+
+  function handleRemove(){
+    Alert.alert("Exclusão", "Certeza que deseja remover Link selecionado?", [
+      { style: "cancel", text: "Não" },
+      { text: "Sim", onPress: linkRemove}
+    ])
+  }
 
   function handleDetails(selected: LinkStorage){
     setShowModal(true)
@@ -89,7 +112,7 @@ export default function Index() {
             <Text style={styles.modalUrl}>{link.url}</Text>
 
             <View style={styles.modalFooter}>
-              <Option name="Excluir" icon="delete" variant="secundary"/>
+              <Option name="Excluir" icon="delete" variant="secundary" onPress={handleRemove}/>
               <Option name="Abrir" icon="language"/>
             </View>
           </View>

@@ -44,14 +44,30 @@ async function Save(newLink: LinkStorage){
 
         //-- Grava no storage pela chave LINKS_STORAGE_KEY
         await AsyncStorage.setItem(LINKS_STORAGE_KEY, update)
-
     }catch (error){
         throw error
-    }}
+    }
+}
+
+async function Remove(id: string){
+    try{
+        const response = await Get()
+
+        /* Passa para update apenas links com "ID" diferente do que ta excluindo. 
+           Assim, ao gravar, grava sem o link excluído! 
+        */
+        const update = JSON.stringify(response.filter((item) => item.id !== id))
+
+        await AsyncStorage.setItem(LINKS_STORAGE_KEY, update)
+    }catch(error){
+        throw error
+    }
+}
 
 //-- assim facilita para usar, podendo chamar como linkStorage.Get ou linkStorage.Save
 export const linkStorage = {
     Get, 
-    Save
+    Save,
+    Remove
 }
 
