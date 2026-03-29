@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { Alert, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native";
 
 import { colors } from "@/styles/colors";
@@ -10,7 +10,7 @@ import { Link } from "@/components/link";
 import { Option } from "@/components/options";
 import { linkStorage, LinkStorage } from "@/storage/link-storage";
 import { categories } from "@/utils/categories";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 export default function Index() {
   //-- lista de LinkStorage que inicia vazia...
@@ -27,8 +27,16 @@ export default function Index() {
   }
 
   //-- É executado sempre que o valor de Category mudar, chamando assim a getLinks()
+  /* Essa função foi trocada pelo UseCallBack com useFocusEffect
   useEffect(() => 
     {getLinks()}, [category]
+  )
+  */
+
+  useFocusEffect(
+    useCallback(() => {
+      getLinks()  
+    }, [])
   )
 
   return (
@@ -49,7 +57,7 @@ export default function Index() {
                                     name={item.name}
                                     url={item.url}
                                     onDetails={() => console.log("Clicou")}
-                            />)}
+                                  />)}
         style={styles.links}                          
         contentContainerStyle={styles.linksContent}
       />
